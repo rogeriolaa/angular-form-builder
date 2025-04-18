@@ -1,0 +1,56 @@
+<div [formGroup]="form" class="form-field">
+  <mat-form-field
+    appearance="outline"
+    *ngIf="field.type === 'text' || field.type === 'masked'"
+  >
+    <mat-label>{{ field.label }}</mat-label>
+    <input
+      matInput
+      [formControlName]="field.id"
+      [type]="field.type === 'masked' ? 'text' : 'text'"
+      [placeholder]="field.config?.placeholder || ''"
+      [mask]="field.mask || ''"
+      [required]="field.required"
+    />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" *ngIf="field.type === 'number'">
+    <mat-label>{{ field.label }}</mat-label>
+    <input
+      matInput
+      [formControlName]="field.id"
+      type="number"
+      [min]="field.config?.min ?? null"
+      [max]="field.config?.max ?? null"
+      [step]="field.config?.step ?? 1"
+      [required]="field.required"
+    />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" *ngIf="field.type === 'select'">
+    <mat-label>{{ field.label }}</mat-label>
+    <mat-select [formControlName]="field.id" [required]="field.required">
+      <mat-option *ngFor="let option of field.options" [value]="option.value">
+        {{ option.label }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" *ngIf="field.type === 'date'">
+    <mat-label>{{ field.label }}</mat-label>
+    <input
+      matInput
+      [formControlName]="field.id"
+      [matDatepicker]="picker"
+      [required]="field.required"
+    />
+    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <div *ngIf="field.type === 'checkbox'" class="checkbox-field">
+    <mat-checkbox [formControlName]="field.id">
+      {{ field.label }}
+    </mat-checkbox>
+  </div>
+</div>

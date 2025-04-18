@@ -1,0 +1,140 @@
+<div class="form-editor-container">
+  <header class="header-section">
+    <div class="header-content">
+      <button
+        mat-icon-button
+        color="white"
+        (click)="goBack()"
+        class="back-button"
+      >
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h1>Form Editor</h1>
+      <p class="header-subtitle">
+        {{ formName || "New Form" }}
+      </p>
+    </div>
+  </header>
+
+  <div class="content-container">
+    <div class="editor-toolbar">
+      <mat-form-field appearance="outline" class="form-name-field">
+        <mat-label>Form Name</mat-label>
+        <input matInput [(ngModel)]="formName" required />
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="togglePreview()">
+        {{ isPreviewMode ? "Edit" : "Preview" }}
+      </button>
+    </div>
+
+    <div class="form-fields">
+      <ng-container *ngFor="let field of fields; trackBy: trackByIndex">
+        <!-- Only show field if it has no parent or if its parent's value matches -->
+        <div
+          class="field-container"
+          *ngIf="shouldShowField(field)"
+          [class.conditional-field]="field.parentField"
+        >
+          <div
+            class="conditional-label"
+            *ngIf="field.parentField && !isPreviewMode"
+          >
+            Conditional field for option: "{{ getParentOptionLabel(field) }}"
+          </div>
+          <div class="field-header" *ngIf="!isPreviewMode">
+            <mat-form-field appearance="outline">
+              <mat-label>Field Label</mat-label>
+              <input matInput [(ngModel)]="field.label" />
+            </mat-form-field>
+            <mat-checkbox [(ngModel)]="field.required">Required</mat-checkbox>
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="editField(field)"
+              [disabled]="fieldHasResponses(field.id)"
+              matTooltip="Cannot edit field with responses"
+            >
+              <mat-icon>{{
+                fieldHasResponses(field.id) ? "lock" : "edit"
+              }}</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              (click)="deleteField(field)"
+              [disabled]="fieldHasResponses(field.id)"
+              matTooltip="Cannot delete field with responses"
+            >
+              <mat-icon>{{
+                fieldHasResponses(field.id) ? "lock" : "delete"
+              }}</mat-icon>
+            </button>
+          </div>
+
+          <ng-container [ngSwitch]="field.type">
+            <app-text-field
+              *ngSwitchCase="'text'"
+              [field]="field"
+              [preview]="isPreviewMode"
+              (configureField)="openTextConfig($event)"
+            ></app-text-field>
+            <app-number-field
+              *ngSwitchCase="'number'"
+              [field]="field"
+              [preview]="isPreviewMode"
+              (configureField)="openNumberConfig($event)"
+            ></app-number-field>
+            <app-select-field
+              *ngSwitchCase="'select'"
+              [field]="field"
+              [preview]="isPreviewMode"
+              (addOption)="addOption(field)"
+              (removeOption)="removeOption(field, $event)"
+              (addConditionalField)="addConditionalField(field, $event)"
+              (selectionChange)="onSelectChange($event, field)"
+            ></app-select-field>
+            <app-checkbox-field
+              *ngSwitchCase="'checkbox'"
+              [field]="field"
+              [preview]="isPreviewMode"
+            ></app-checkbox-field>
+            <app-date-field
+              *ngSwitchCase="'date'"
+              [field]="field"
+              [preview]="isPreviewMode"
+            ></app-date-field>
+            <app-masked-field
+              *ngSwitchCase="'masked'"
+              [field]="field"
+              [preview]="isPreviewMode"
+              (configureField)="openMaskConfig($event)"
+            ></app-masked-field>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="form-actions" *ngIf="!isPreviewMode">
+      <button mat-stroked-button [matMenuTriggerFor]="addMenu">
+        <mat-icon>add</mat-icon>
+        Add Field
+      </button>
+      <mat-menu #addMenu="matMenu">
+        <button
+          mat-menu-item
+          *ngFor="let type of availableFieldTypes"
+          (click)="addField(type.value)"
+        >
+          {{ type.label }}
+        </button>
+      </mat-menu>
+      <button mat-raised-button color="primary" (click)="saveForm()">
+        Save Form
+      </button>
+    </div>
+
+    <div class="form-actions" *ngIf="isPreviewMode">
+      <button mat-stroked-button (click)="clearForm()">Clear</button>
+    </div>
+  </div>
+</div>
