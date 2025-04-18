@@ -27,14 +27,22 @@
       </button>
     </div>
 
-    <div class="form-fields">
+    <div class="form-fields" cdkDropList (cdkDropListDropped)="onDrop($event)">
       <ng-container *ngFor="let field of fields; trackBy: trackByIndex">
-        <!-- Only show field if it has no parent or if its parent's value matches -->
         <div
           class="field-container"
-          *ngIf="shouldShowField(field)"
           [class.conditional-field]="field.parentField"
+          *ngIf="shouldShowField(field)"
+          cdkDrag
+          [cdkDragDisabled]="isPreviewMode || fieldHasResponses(field.id)"
         >
+          <div
+            class="drag-handle"
+            *ngIf="!isPreviewMode && !fieldHasResponses(field.id)"
+            cdkDragHandle
+          >
+            <mat-icon>drag_indicator</mat-icon>
+          </div>
           <div
             class="conditional-label"
             *ngIf="field.parentField && !isPreviewMode"

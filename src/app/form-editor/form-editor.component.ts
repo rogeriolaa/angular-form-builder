@@ -1,3 +1,8 @@
+import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -36,6 +41,7 @@ import { TextConfigDialogComponent } from './text-config-dialog/text-config-dial
     DateFieldComponent,
     MaskedFieldComponent,
     MatMenuModule,
+    DragDropModule,
   ],
   templateUrl: './form-editor.component.html',
   styleUrls: ['./form-editor.component.scss'],
@@ -333,6 +339,12 @@ export class FormEditorComponent implements OnInit, OnDestroy {
       if (index !== -1) {
         this.fields.splice(index, 1);
       }
+    }
+  }
+
+  onDrop(event: CdkDragDrop<FormField[]>) {
+    if (!this.isPreviewMode) {
+      moveItemInArray(this.fields, event.previousIndex, event.currentIndex);
     }
   }
 }
