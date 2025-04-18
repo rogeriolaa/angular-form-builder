@@ -18,8 +18,10 @@
 
 .form-fields {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 24px;
+  align-items: flex-start;
 }
 
 .field-container {
@@ -29,6 +31,24 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s, box-shadow 0.2s;
   position: relative;
+  margin: 0;
+
+  // Width variations
+  &.w-25 {
+    width: calc(25% - 18px);
+  }
+
+  &.w-50 {
+    width: calc(50% - 12px);
+  }
+
+  &.w-75 {
+    width: calc(75% - 6px);
+  }
+
+  &.w-100 {
+    width: 100%;
+  }
 
   &:hover {
     transform: translateY(-2px);
@@ -393,6 +413,44 @@ mat-checkbox {
 
 .field-container {
   margin-bottom: 24px;
+}
+
+.field-width {
+  width: 100px;
+  margin-right: 16px;
+}
+
+.field-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.field-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-main-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  .field-label {
+    flex: 1;
+  }
+}
+
+.field-sub-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  .field-width {
+    width: 120px;
+  }
 }
 
 mat-divider {

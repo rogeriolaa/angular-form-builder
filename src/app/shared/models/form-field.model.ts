@@ -9,11 +9,14 @@ export type FieldType =
   | 'date'
   | 'masked';
 
+export type FieldWidth = '25' | '50' | '75' | '100';
+
 export interface FormField {
   id: string;
   label: string;
   type: string;
   required: boolean;
+  width?: FieldWidth;
   value?: any;
   options?: SelectOption[];
   parentField?: string;

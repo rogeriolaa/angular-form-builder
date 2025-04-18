@@ -114,7 +114,7 @@ export class FormEditorComponent implements OnInit, OnDestroy {
       label: 'New Field',
       type: type as any,
       required: false,
-      // Add id to the initial option
+      width: '100', // Add default width
       options:
         type === 'select'
           ? [{ id: this.generateId(), value: '', label: '' }]
